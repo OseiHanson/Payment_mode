@@ -1,0 +1,124 @@
+﻿@page
+@model Payment_Mode.Pages.IndexModel
+@{
+    ViewData["Title"] = "Hanson's Hub - Payment";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center mb-4">
+                        <!-- 3D Coin Animations: You can add more coins or change their icons -->
+                        <div class="coin-3d"><div class="coin-3d-inner">₵</div></div>
+                        <div class="coin-3d"><div class="coin-3d-inner">💰</div></div>
+                        <div class="coin-3d"><div class="coin-3d-inner">💳</div></div>
+                    </div>
+                    <h1 class="mb-4 text-center text-primary">Hanson's Hub Payment Instructions</h1>
+                    <p class="lead text-center">Make your payment using any of the following mobile money networks:</p>
+                    <!-- PAYMENT FORM SECTION: Paystack integration -->
+                    <form method="post" asp-page-handler="Pay" class="mb-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Name" class="form-label">Full Name</label>
+                                <input asp-for="Name" class="form-control" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="form-label">Email</label>
+                                <input asp-for="Email" type="email" class="form-control" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Phone" class="form-label">Phone Number</label>
+                                <input asp-for="Phone" class="form-control" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Amount" class="form-label">Amount (GHS)</label>
+                                <input asp-for="Amount" type="number" min="1" step="0.01" class="form-control" required />
+                            </div>
+                            <div class="col-md-12">
+                                <label asp-for="Network" class="form-label">Network</label>
+                                <select asp-for="Network" class="form-select" required>
+                                    <option value="">Select Network</option>
+                                    <option>MTN</option>
+                                    <option>Telecel</option>
+                                    <option>AirtelTigo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-warning btn-lg">Pay with Paystack</button>
+                        </div>
+                    </form>
+                    <!-- END PAYMENT FORM SECTION -->
+                    @if (Model.PaymentReference != null)
+                    {
+                        <script src="https://js.paystack.co/v1/inline.js"></script>
+                        <script>
+                            PaystackPop.setup({
+                                key: '@Model.PaystackPublicKey',
+                                email: '@Model.Email',
+                                amount: @((int)(Model.Amount * 100)),
+                                currency: 'GHS',
+                                ref: '@Model.PaymentReference',
+                                callback: function(response){
+                                    alert('Payment complete! Reference: ' + response.reference);
+                                    window.location.href = '/';
+                                },
+                                onClose: function(){
+                                    alert('Payment window closed.');
+                                }
+                            }).openIframe();
+                        </script>
+                    }
+                    
+                    <!-- PAYMENT LOGOS SECTION: You can change or add images for payment networks below -->
+                    <ul class="list-group mb-4">
+                        <li class="list-group-item d-flex align-items-center">
+                            <!-- MTN Logo -->
+                            <img class="animated-logo" src="~/images/image/mtn-logo.png" alt="MTN" style="height:32px;width:auto;margin-right:10px;"> MTN Mobile Money
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <!-- Telecel Logo (formerly Vodafone) -->
+                            <img class="animated-logo" src="~/images/image/telecel-logo.png" alt="Telecel" style="height:32px;width:auto;margin-right:10px;"> Telecel Cash
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <!-- AirtelTigo Logo -->
+                            <img class="animated-logo" src="~/images/image/airteltigo-logo.png" alt="AirtelTigo" style="height:32px;width:auto;margin-right:10px;"> AirtelTigo Money
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <!-- Hanson's Hub Logo -->
+                            <img class="animated-logo" src="~/images/image/hanson-logo.png" alt="Hanson's Hub" style="height:32px;width:auto;margin-right:10px;"> Hanson's Hub
+                        </li>
+                    </ul>
+                    <!-- END PAYMENT LOGOS SECTION -->
+                    <!-- PAYMENT DETAILS SECTION: Update number or account name here -->
+                    <div class="alert alert-info text-center mb-4">
+                        <strong>Payment Number:</strong> <span class="fs-5">+233 54 383 0824</span><br />
+                        <strong>Account Name:</strong> Hanson's Hub
+                    </div>
+                    <!-- END PAYMENT DETAILS SECTION -->
+                    <!-- PAYMENT INSTRUCTIONS SECTION: Edit payment steps here -->
+                    <h5>How to Pay:</h5>
+                    <ol>
+                        <li>Choose your preferred network (MTN, Telecel, or AirtelTigo).</li>
+                        <li>Go to your mobile money menu.</li>
+                        <li>Select <strong>Send Money</strong> or <strong>Transfer</strong>.</li>
+                        <li>Enter the payment number: <strong>+233543830824</strong>.</li>
+                        <li>Enter the amount to pay.</li>
+                        <li>Confirm the account name: <strong>Hanson's Hub</strong>.</li>
+                        <li>Complete the transaction.</li>
+                    </ol>
+                    <!-- END PAYMENT INSTRUCTIONS SECTION -->
+                    <!-- CONFIRMATION NOTE SECTION: Edit this note if needed -->
+                    <div class="alert alert-warning mt-4">
+                        After payment, please send your payment confirmation to our WhatsApp or email for verification.
+                    </div>
+                    <!-- END CONFIRMATION NOTE SECTION -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
